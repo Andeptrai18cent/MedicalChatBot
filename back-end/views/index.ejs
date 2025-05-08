@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Assistant Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-2xl p-6 rounded-2xl shadow-lg">
+    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">🤖 AI Assistant</h1>
+    
+    <textarea id="inputText" rows="6" placeholder="Nhập yêu cầu gửi tới AI..." 
+      class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4 resize-none"></textarea>
+    
+    <button onclick="sendRequest()" 
+      class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
+      Gửi yêu cầu
+    </button>
+    
+    <div id="result" class="mt-6 bg-gray-50 border border-gray-200 p-4 rounded-xl text-gray-800 min-h-[50px]">
+      Kết quả sẽ hiển thị ở đây.
+    </div>
+  </div>
+
+  <script>
+    async function sendRequest() {
+      const input = document.getElementById("inputText").value;
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = "⏳ Đang xử lý...";
+
+      try {
+        const response = await fetch("/chat/:handle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: input }),
+        });
+        const data = await response.json();
+        resultDiv.textContent = data.answer || "⚠️ Không có phản hồi.";
+      } catch (error) {
+        resultDiv.textContent = "❌ Lỗi: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>

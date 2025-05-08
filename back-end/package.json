@@ -1,0 +1,32 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "enviroment for chatbot-ai",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "123@123"
+  ],
+  "author": "andeptrai",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^3.12.1",
+    "@pinecone-database/pinecone": "^5.1.2",
+    "@supabase/supabase-js": "^2.49.4",
+    "axios": "^1.9.0",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.24",
+    "mysql2": "^3.14.1",
+    "nodemon": "^3.1.10"
+  }
+}

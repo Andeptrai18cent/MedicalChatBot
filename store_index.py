@@ -16,6 +16,6 @@ embeddings = download_hugging_face_embeddings()
 
 doc_search = PineconeVectorStore.from_documents(
     documents=text_chunks,
-    index_name=index_name,
+    index_name="test1",
     embedding=embeddings,
 )
