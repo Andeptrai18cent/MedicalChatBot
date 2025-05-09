@@ -27,11 +27,9 @@ const authenUser = async (req, res) => {
 
     const user = new User(
         email = req.body.email,
-        name = req.body.name,   
         phone_number = req.body.phone_number,
         username =  req.body.username,
         password = hashPassword,
-        address = req.body.address
     );
 
     try {
