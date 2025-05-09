@@ -6,9 +6,8 @@ const {
   sendMessage,
   deleteConversation,handleChat,
   getHome} = require('../controllers/chatController.js');
-const { chat } = require('@pinecone-database/pinecone/dist/assistant/data/chat.js');
 
-const router = express.Router();
+const chat = express.Router();
 
 // All routes here are protected by the auth middleware in server/index.js
 
@@ -23,4 +22,4 @@ router.post('/conversations/:conversationId/messages', sendMessage);
 router.post('/chat/:handle', handleChat);
 router.get('/',getHome);
 
-module.exports = router;
+module.exports = chat;

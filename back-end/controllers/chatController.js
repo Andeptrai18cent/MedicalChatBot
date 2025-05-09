@@ -1,8 +1,8 @@
 const supabase = require('../config/supabase');
 // const { generateAIResponse } = require('../services/aiService');
 const axios = require('axios');
-// Get all conversations for a user
 
+// Get all conversations for a user
 const getConversations = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -18,6 +18,32 @@ const getConversations = async (req, res, next) => {
     }
 
     res.status(200).json({ conversations: data });
+  } catch (error) {
+    next(error);
+  }
+};
+// Save a new conversation
+const saveMessage = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { conversationId, content } = req.body;
+
+    if (!conversationId || !content) {
+      return res.status(400).json({ message: 'ID cuộc hội thoại và nội dung tin nhắn là bắt buộc.' });
+    }
+
+    const { data, error } = await supabase
+      .from('messages')
+      .insert([
+        { conversation_id: conversationId, user_id: userId, content: content },
+      ])
+      .select('id, conversation_id, user_id, content, created_at');
+
+    if (error) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    res.status(201).json({ message: 'Tin nhắn đã được lưu thành công.', message: data[0] });
   } catch (error) {
     next(error);
   }
