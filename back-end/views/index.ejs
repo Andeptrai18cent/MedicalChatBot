@@ -3,43 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Assistant Dashboard</title>
+  <title>AI Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white w-full max-w-2xl p-6 rounded-2xl shadow-lg">
-    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">🤖 AI Assistant</h1>
-    
-    <textarea id="inputText" rows="6" placeholder="Nhập yêu cầu gửi tới AI..." 
-      class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4 resize-none"></textarea>
-    
-    <button onclick="sendRequest()" 
-      class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
-      Gửi yêu cầu
-    </button>
-    
-    <div id="result" class="mt-6 bg-gray-50 border border-gray-200 p-4 rounded-xl text-gray-800 min-h-[50px]">
-      Kết quả sẽ hiển thị ở đây.
-    </div>
+<body class="bg-gray-100 h-screen overflow-hidden">
+  <div class="flex h-full">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
+      <!-- Thông tin người dùng -->
+      <div class="flex items-center gap-3 mb-6">
+        <img src="https://via.placeholder.com/40" class="rounded-full border w-10 h-10" />
+        <div>
+          <h2 class="font-semibold text-gray-800 text-sm">Nguyễn Văn A</h2>
+          <p class="text-xs text-gray-500">user@example.com</p>
+        </div>
+      </div>
+
+      <!-- Lịch sử -->
+      <h3 class="text-gray-700 text-sm font-semibold mb-2">🕓 Lịch sử</h3>
+      <ul id="historyList" class="flex-1 overflow-y-auto space-y-2 text-sm pr-1">
+        <!-- Lịch sử trò chuyện -->
+      </ul>
+
+      <!-- Logout -->
+      <button class="mt-4 bg-red-100 text-red-600 px-3 py-2 rounded-xl text-sm hover:bg-red-200 transition">
+        Đăng xuất
+      </button>
+    </aside>
+
+    <!-- Main chat area -->
+    <main class="flex-1 flex flex-col bg-gray-50">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-gray-300 bg-white">
+        <h1 class="text-xl font-bold text-gray-800">🤖 AI Assistant</h1>
+      </div>
+
+      <!-- Chat box -->
+      <div id="chatBox" class="flex-1 px-6 py-4 overflow-y-auto space-y-4">
+        <!-- Tin nhắn sẽ hiển thị ở đây -->
+      </div>
+
+      <!-- Input -->
+      <div class="p-4 border-t bg-white">
+        <div class="flex gap-3">
+          <textarea id="inputText" rows="2" placeholder="Nhập yêu cầu gửi tới AI..." 
+            class="flex-1 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+          <button onclick="sendRequest()" 
+            class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
+            Gửi
+          </button>
+        </div>
+      </div>
+    </main>
   </div>
 
   <script>
+    let historyIndex = 0;
+
     async function sendRequest() {
-      const input = document.getElementById("inputText").value;
-      const resultDiv = document.getElementById("result");
-      resultDiv.textContent = "⏳ Đang xử lý...";
+      const input = document.getElementById("inputText");
+      const chatBox = document.getElementById("chatBox");
+      const historyList = document.getElementById("historyList");
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      // User message
+      const userDiv = document.createElement("div");
+      userDiv.className = "self-end bg-blue-100 text-blue-800 p-3 rounded-xl max-w-3xl ml-auto";
+      userDiv.textContent = userMessage;
+      chatBox.appendChild(userDiv);
+
+      input.value = "";
+
+      // Loading...
+      const loadingDiv = document.createElement("div");
+      loadingDiv.className = "self-start bg-gray-200 text-gray-700 p-3 rounded-xl max-w-3xl mr-auto italic";
+      loadingDiv.textContent = "⏳ Đang xử lý...";
+      chatBox.appendChild(loadingDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
         const response = await fetch("/chat/:handle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: input }),
+          body: JSON.stringify({ message: userMessage }),
         });
         const data = await response.json();
-        resultDiv.textContent = data.answer || "⚠️ Không có phản hồi.";
+
+        loadingDiv.textContent = data.answer || "⚠️ Không có phản hồi.";
+        loadingDiv.classList.remove("italic");
+
+        // Lịch sử
+        const historyItem = document.createElement("li");
+        historyItem.className = "bg-gray-100 border p-2 rounded-lg cursor-pointer hover:bg-blue-100";
+        historyItem.textContent = `Chat ${++historyIndex}: ${userMessage.slice(0, 30)}...`;
+        historyItem.onclick = () => alert(data.answer);
+        historyList.appendChild(historyItem);
       } catch (error) {
-        resultDiv.textContent = "❌ Lỗi: " + error.message;
+        loadingDiv.textContent = "❌ Lỗi: " + error.message;
+        loadingDiv.classList.remove("italic");
       }
+
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
   </script>
 </body>

@@ -4,7 +4,7 @@ S# Source data: Medical Book
 * Medical book => extract docs => chunk1, chunk2, chunk3...
 
 * (chunk1, chunk2, chunk3 ...) => Embedding model => Build Sementic => Indea => Knowlegde base
-S
+
 ***Khái niệm chunk**:* *một đoạn thông tin liên kết chặt chẽ với nhau, thường là một nhóm từ có ý nghĩa cú pháp hoặc ngữ nghĩa. Tùy vào ngữ cảnh sử dụng, "chunk" có thể có những ý nghĩa cụ thể như sau:*
 
 ### 2.Technologies Used

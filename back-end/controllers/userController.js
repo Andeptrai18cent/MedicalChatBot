@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const User = require('./models/user');
 const { registerValidator } = require('../validation/auth');
 const connection = require('../config/supabase');
 require("dotenv").config()
@@ -11,7 +11,6 @@ const crypto = require('crypto');
 //Register user
 const authenUser = async (req, res) => {
     const validate_error = await registerValidator(req.body);
-
     //console.log(validate_error)
     if (validate_error.error) return res.status(422).send(validate_error.error.details[0].message);
 
